@@ -17,7 +17,7 @@ function scrollFunction() {
     // if(help < y && y < authors)document.title = 'Help Us | Orama';
     // if(authors < y )document.title = 'Authors | Orama';
 }
-
+ 
 // var about = document.getElementById('about').offsetTop;
 // var app = document.getElementById('app').offsetTop;
 // var help = document.getElementById('help').offsetTop;
