@@ -18,54 +18,63 @@ const FILES_TO_CACHE = [
     'teachablemachine-image.min.js',
     'tf.min.js'
 ];
-var CACHE_NAME = '0.7'; //version of cache
 
-self.addEventListener('install', event => {
-    console.log(event)
-    event.waitUntil(
-        caches.open(CACHE_NAME).then((cache) => {
-        console.log('[ServiceWorker] Pre-caching offline page');
-        return cache.addAll(FILES_TO_CACHE);
-        })
-    );
+const staticCacheName = 'site-static-v1';
+const dynamicCacheName = 'site-dynamic-v1';
+
+const limitCacheSize = (name, size) => {
+	caches.open(name).then(cache => {
+		cache.keys().then(keys => {
+		if(keys.length > size){
+			cache.delete(keys[0]).then(limitCacheSize(name, size));
+		}
+		});
+	});
+};
+
+// install event
+self.addEventListener('install', evt => {
+//console.log('service worker installed');
+evt.waitUntil(
+	caches.open(staticCacheName).then((cache) => {
+	console.log('caching shell assets');
+	cache.addAll(assets);
+	})
+);
 });
 
-self.addEventListener('activate', event => {
-    event.waitUntil(
-        caches.keys().then((keyList) => {
-        return Promise.all(keyList.map((key) => {
-            if (key !== CACHE_NAME) {
-            console.log('[ServiceWorker] Removing old cache', key);
-            return caches.delete(key);
-            }
-        }));
-        })
-    );
+// activate event
+self.addEventListener('activate', evt => {
+//console.log('service worker activated');
+evt.waitUntil(
+	caches.keys().then(keys => {
+	//console.log(keys);
+	return Promise.all(keys
+		.filter(key => key !== staticCacheName && key !== dynamicCacheName)
+		.map(key => caches.delete(key))
+	);
+	})
+);
 });
 
-self.addEventListener('fetch', event =>{
-    // console.log(event)
-    if (event.request.mode !== 'navigate') {
-        event.respondWith(
-            fetch(event.request)
-                .catch(() => {
-                return caches.open(CACHE_NAME)
-                    .then((cache) => {
-                        var c = event.request.url.split(event.request.refferer).join('')
-                        return cache.match(c);
-                    });
-                })
-        );
-    }
-    if (event.request.mode == 'navigate'){ 
-        event.respondWith(
-            fetch(event.request)
-                .catch(() => {
-                return caches.open(CACHE_NAME)
-                    .then((cache) => {
-                        return cache.match('index.html');
-                    });
-                })
-        );
-    }
+// fetch events
+self.addEventListener('fetch', evt => {
+if(evt.request.url.indexOf('firestore.googleapis.com') === -1){
+	evt.respondWith(
+	caches.match(evt.request).then(cacheRes => {
+		return cacheRes || fetch(evt.request).then(fetchRes => {
+		return caches.open(dynamicCacheName).then(cache => {
+			cache.put(evt.request.url, fetchRes.clone());
+			// check cached items size
+			limitCacheSize(dynamicCacheName, 15);
+			return fetchRes;
+		})
+		});
+	}).catch(() => {
+		if(evt.request.url.indexOf('.html') > -1){
+		return caches.match('/index.html');
+		} 
+	})
+	);
+}
 });
