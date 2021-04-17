@@ -7,10 +7,10 @@ document.getElementById('begin').addEventListener('click', function(){
     }
 })
 
-var plate = new Audio('/app/audio/plate.mp3');
-var cup = new Audio('/app/audio/cup.mp3');
-var hat = new Audio('/app/audio/hat.mp3');
-var slipper = new Audio('/app/audio/slipper.mp3');
+var plate = new Audio('./audio/plate.mp3');
+var cup = new Audio('./audio/cup.mp3');
+var hat = new Audio('./audio/hat.mp3');
+var slipper = new Audio('./audio/slipper.mp3');
 
 const URL = "model/";
 
