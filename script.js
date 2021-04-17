@@ -1,6 +1,3 @@
-const link = document.getElementById('app_link');
-link.href = window.origin.split('https').join('http').split('http').join('https') + '/app';
-
 window.onscroll = function() {scrollFunction()};
 
 function scrollFunction() {
