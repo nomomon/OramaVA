@@ -9,5 +9,12 @@ Our goal is to help visually impaired people to become more independent.
 
 - Check out the [PWA]!
 
+## _#BTS_
+- Model used is MobileNet
+- Trained on [Teachable Machine](https://teachablemachine.withgoogle.com/)
+
+## License
+All of the codebase is **MIT Licensed** unless otherwise stated.
+
 [website]: https://nomomon.github.io/OramaVA/
 [PWA]: https://nomomon.github.io/OramaVA/app/
