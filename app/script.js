@@ -42,8 +42,6 @@ async function performDetections(model, camera, [ctx, imgHeight, imgWidth]) {
     const cameraInputTensor = tf.browser.fromPixels(camera);
     const singleBatch = tf.expandDims(cameraInputTensor, 0);
 
-    const [height, width] = cameraInputTensor.shape;
-    
 	const proccessedImage = tf.image.cropAndResize(
 		singleBatch, 	        					// image [batch,imageHeight,imageWidth, depth]
 		[[0, 0, 1, 1]],				                // standartized boxes [numBoxes, 4]
