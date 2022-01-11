@@ -1,65 +1,197 @@
-var good = 1;
-document.getElementById('begin').addEventListener('click', function(){
-    document.getElementById('begin').lastElementChild.innerText = 'Loading...\nIt may take sometime';
-    if(good == 1){
-        init();
-        good = 0;
+function $(querySelector, element = document){
+    return element.querySelector(querySelector);
+}
+
+function loadModel(){
+    const modelPath = "./model/model.json";
+    return tf.loadGraphModel(modelPath);
+}
+
+async function setupWebcam(videoRef) {
+    if (navigator.mediaDevices && navigator.mediaDevices.getUserMedia) {
+        const webcamStream = await navigator.mediaDevices.getUserMedia({
+            audio: false,
+            video: {
+                facingMode: 'environment', // 'user' or 'environment'
+            },
+        })
+        if ('srcObject' in videoRef) {
+            videoRef.srcObject = webcamStream
+        } else {
+            videoRef.src = window.URL.createObjectURL(webcamStream)
+        }
+        return new Promise((resolve, _) => {
+            videoRef.onloadedmetadata = () => {
+                const detection = document.getElementById('detection')
+                const ctx = detection.getContext('2d')
+                const imgWidth = videoRef.clientWidth
+                const imgHeight = videoRef.clientHeight
+                detection.width = imgWidth
+                detection.height = imgHeight
+                ctx.font = '16px sans-serif'
+                ctx.textBaseline = 'top'
+                resolve([ctx, imgHeight, imgWidth])
+            }
+        })
+    } else {
+        alert('Нет вебкамеры - извините!')
     }
-})
+}
 
-var plate = new Audio('./audio/plate.mp3');
-var cup = new Audio('./audio/cup.mp3');
-var hat = new Audio('./audio/hat.mp3');
-var slipper = new Audio('./audio/slipper.mp3');
+async function performDetections(model, camera, [ctx, imgHeight, imgWidth]) {
+    const cameraInputTensor = tf.browser.fromPixels(camera);
+    const singleBatch = tf.expandDims(cameraInputTensor, 0);
 
-const URL = "model/";
+    const [height, width] = cameraInputTensor.shape;
+    
+	const proccessedImage = tf.image.cropAndResize(
+		singleBatch, 	        					// image [batch,imageHeight,imageWidth, depth]
+		[[0, 0, 1, 1]],				                // standartized boxes [numBoxes, 4]
+		[0],										// image that the i-th box refers to
+		[480, Math.floor(480*imgWidth/imgHeight)],	// cropSize [num, num]
+        'bilinear'
+	);
+    const proccessedImageInt = tf.cast(proccessedImage, "int32");
 
-// const URL = 'https://teachablemachine.withgoogle.com/models/GRjAN-Le/'
+    const results = await model.executeAsync(proccessedImageInt);
 
-let model, webcam, labelContainer, maxPredictions;
+    const justBoxes = results[1].squeeze();
+    const boxes = await justBoxes.array();
 
-var constraints = {
-    facingMode:"environment"
+    const topDetections = tf.topk(results[0]);
+    const maxIndices = await topDetections.indices.data();
+
+    const justValues = topDetections.values.squeeze();
+    const scores = await justValues.data();
+
+    const maxBoxes = 5;
+    const iouThreshold = 0.2;
+    const detectionThreshold = 0.6;
+
+    const nmsDetections = await tf.image.nonMaxSuppressionWithScoreAsync(
+        justBoxes,          // shape [numBoxes, 4]
+        justValues,         // shape [numBoxes]
+        maxBoxes,           // Stop making boxes when this number is hit 
+        iouThreshold,       // Allowed overlap value 0 to 1
+        detectionThreshold, // Minimum detection score allowed
+        1                   // 0 is normal NMS, 1 is max Soft-NMS 
+    );
+
+    const chosen = await nmsDetections.selectedIndices.data();
+
+    // Clear canvas
+    ctx.clearRect(0, 0, ctx.canvas.width, ctx.canvas.height)
+
+    chosen.forEach((detection) => {
+        ctx.strokeStyle = "#0F0";
+        ctx.lineWidth = 4;
+        ctx.globalCompositeOperation='destination-over'; 
+        const detectedIndex = maxIndices[detection]; 
+        const detectedClass = CLASSES[detectedIndex]; 
+        const detectedScore = scores[detection];
+        const dBox = boxes[detection];
+
+        console.log(detectedClass, detectedScore);
+
+        // No negative values for start positions
+        const startY = dBox[0] > 0 ? dBox[0] * imgHeight : 0;
+        const startX = dBox[1] > 0 ? dBox[1] * imgWidth : 0;
+        const height = (dBox[2] - dBox[0]) * imgHeight;
+        const width = (dBox[3] - dBox[1]) * imgWidth;
+        ctx.strokeRect(startX, startY, width, height);
+
+        // Draw the label background.
+        ctx.globalCompositeOperation='source-over'; 
+        ctx.fillStyle = "#0F0";
+        const textHeight = 16;
+        const textPad = 4;
+        const label = `${detectedClass} ${Math.round(detectedScore * 100)}%`; 
+        const textWidth = ctx.measureText(label).width;
+        ctx.fillRect(
+            startX,
+            startY,
+            textWidth + textPad,
+            textHeight + textPad
+        );
+        // Draw the text last to ensure it's on top.
+        ctx.fillStyle = "#000000";
+        ctx.fillText(label, startX + textPad/2, startY + textPad/2);
+
+        say(detectedClass);
+    });
+
+    tf.dispose([
+        cameraInputTensor, 
+        singleBatch,
+        proccessedImage,
+        proccessedImageInt,
+        results, 
+        topDetections, 
+        justBoxes, 
+        justValues, 
+        nmsDetections
+    ]);
+}
+
+var model;
+
+async function doStuff() {
+    try {
+        model = await loadModel()
+        const camera = document.getElementById('camera')
+        const camDetails = await setupWebcam(camera)
+
+        const interval = setInterval(() => {
+            requestAnimationFrame(() => {
+                performDetections(model, camera, camDetails).then(() => {
+                    if(stop){
+                        tf.dispose([model]);
+                        clearInterval(interval);
+                    }
+                });
+            })
+        }, 1500);
+
+    } catch (e) {
+        console.error(e)
+    }
+}
+
+
+
+function getRusVoice(voices){
+	for(let i in voices){
+		if(voices[i].lang.indexOf("ru") + 1){
+			return voices[i];
+		}
+	}
+	return null;
+}
+
+function say(text, lang="ru"){
+    
+    const voices = speechSynthesis.getVoices();
+    if(voices.length > 0){
+        const tts = new SpeechSynthesisUtterance(text);
+    
+        if(lang == "ru"){
+            tts.lang = "ru-RU";
+        }
+        return window.speechSynthesis.speak(tts);
+    }
+}
+
+let stop = false;
+window.onload = () => {
+    function begin(){
+        $('#begin').removeEventListener('click', begin);
+        $('#begin').style.display = "none";
+        $('#cameraBox').style.display = "block";
+        $("#begin > center:nth-child(6)").innerText = 'Загружается...\nэто может занять некоторое время';
+
+        doStuff();
+    }
+    
+    $('#cameraBox').style.display = "none";
+    $('#begin').addEventListener('click', begin);
 };
-
-async function init() {
-    const modelURL = URL + "model.json";
-    const metadataURL = URL + "metadata.json";
-
-    model = await tmImage.load(modelURL, metadataURL);
-    maxPredictions = model.getTotalClasses();
-
-    const flip = false; 
-    webcam = new tmImage.Webcam(200, 200, flip); // width, height, flip
-    await webcam.setup(constraints);
-    await webcam.play();
-    window.requestAnimationFrame(loop);
-
-    document.getElementById('begin').style.display = 'none';
-
-    document.getElementById("webcam-container").appendChild(webcam.canvas);
-    labelContainer = document.getElementById("label-container");
-    for (let i = 0; i < maxPredictions; i++) {
-        labelContainer.appendChild(document.createElement("div"));
-    }
-}
-
-async function loop() {
-    webcam.update();
-    await predict();
-    window.requestAnimationFrame(loop);
-}
-
-async function predict() {
-    const prediction = await model.predict(webcam.canvas);
-    for (let i = 0; i < maxPredictions; i++) {
-        const classPrediction =
-            prediction[i].className + ": " + prediction[i].probability.toFixed(2);
-        labelContainer.childNodes[i].innerHTML = classPrediction;
-        if(prediction[i].probability > 0.9)try{
-            eval(prediction[i].className +'.play()')
-        }catch(err){}
-    }
-}
-
-// init();
