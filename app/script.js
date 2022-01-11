@@ -179,6 +179,31 @@ function say(text, lang="ru"){
     }
 }
 
+
+let deferredPrompt;
+window.addEventListener('beforeinstallprompt', (e) => {
+    // Prevent the mini-infobar from appearing on mobile
+    e.preventDefault();
+    deferredPrompt = e;
+    document.querySelector("#install").style.display = "block";
+    document.querySelector("#install").addEventListener('click', (e) => {
+        // Hide the app provided install promotion
+        document.querySelector("#install").style.display = "none";
+        // Show the install prompt
+        deferredPrompt.prompt();
+        // Wait for the user to respond to the prompt
+        deferredPrompt.userChoice.then((choiceResult) => {
+            if (choiceResult.outcome === 'accepted') {
+            console.log('User accepted the install prompt');
+            } else {
+            console.log('User dismissed the install prompt');
+            }
+        })
+    });
+});
+
+
+
 let stop = false;
 window.onload = () => {
     function begin(){
