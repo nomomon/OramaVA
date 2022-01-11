@@ -208,11 +208,12 @@ let stop = false;
 window.onload = () => {
     function begin(){
         $('#begin').removeEventListener('click', begin);
-        $('#begin').style.display = "none";
-        $('#cameraBox').style.display = "block";
-        $("#begin > center:nth-child(6)").innerText = 'Загружается...\nэто может занять некоторое время';
-
-        doStuff();
+        $("#begin > center:nth-child(6)").innerText = 'Модель загружается...\nэто может занять некоторое время';
+        
+        await doStuff().then(() => {
+            $('#cameraBox').style.display = "block";
+            $('#begin').style.display = "none";
+        });
     }
     
     $('#cameraBox').style.display = "none";
