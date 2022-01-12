@@ -1,10 +1,11 @@
 const FILES_TO_CACHE = [
-    'index.html',
-    'script.js',
+	'index.html',
     'style.css',
-    'model/labels_rus.js',
-    'model/labels.js',
+	'tf.min.js',
+    'script.js',
     'model/model.json',
+    'model/labels.js',
+    'model/labels_rus.js',
     'model/tensorflowjs_model.pb',
     'model/group1-shard1of17',
     'model/group1-shard2of17',
@@ -29,11 +30,10 @@ const FILES_TO_CACHE = [
     'fonts/Spartan_2.woff2',
     'fonts/Raleway_1.woff2',
     'fonts/Raleway_2.woff2',
-    'tf.min.js',
 ];
 
 const staticCacheName = 'site-static-v3';
-const dynamicCacheName = 'site-dynamic-v3';
+const dynamicCacheName = 'site-dynamic-v4';
 
 const limitCacheSize = (name, size) => {
 	caches.open(name).then(cache => {
