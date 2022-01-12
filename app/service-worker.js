@@ -33,7 +33,7 @@ const FILES_TO_CACHE = [
 ];
 
 const staticCacheName = 'site-static-v3';
-const dynamicCacheName = 'site-dynamic-v2';
+const dynamicCacheName = 'site-dynamic-v3';
 
 const limitCacheSize = (name, size) => {
 	caches.open(name).then(cache => {

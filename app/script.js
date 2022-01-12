@@ -46,7 +46,7 @@ async function performDetections(model, camera, [ctx, imgHeight, imgWidth]) {
 		singleBatch, 	        					// image [batch,imageHeight,imageWidth, depth]
 		[[0, 0, 1, 1]],				                // standartized boxes [numBoxes, 4]
 		[0],										// image that the i-th box refers to
-		[480, Math.floor(480*imgWidth/imgHeight)],	// cropSize [num, num]
+		[size, Math.floor(size*imgWidth/imgHeight)],// cropSize [num, num]
         'bilinear'
 	);
     const proccessedImageInt = tf.cast(proccessedImage, "int32");
@@ -202,7 +202,11 @@ window.addEventListener('beforeinstallprompt', (e) => {
     });
 });
 
-
+let size = 200;
+$("input").addEventListener("input", (e) => {
+    size = e.srcElement.value;
+    $("#rangeValue").innerText = e.srcElement.value;
+});
 
 let stop = false;
 window.onload = () => {
@@ -215,7 +219,7 @@ window.onload = () => {
             $('#begin').style.display = "none";
         });
     }
-    
+    window.scrollTo(0, 0);
     $('#cameraBox').style.transform = "translateY(100vh)";
     $('#begin').addEventListener('click', begin);
 };
