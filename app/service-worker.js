@@ -32,7 +32,7 @@ const FILES_TO_CACHE = [
     'tf.min.js',
 ];
 
-const staticCacheName = 'site-static-v2';
+const staticCacheName = 'site-static-v3';
 const dynamicCacheName = 'site-dynamic-v2';
 
 const limitCacheSize = (name, size) => {
