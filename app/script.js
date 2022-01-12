@@ -210,7 +210,7 @@ window.onload = () => {
         $('#begin').removeEventListener('click', begin);
         $("#begin > center:nth-child(6)").innerText = 'Модель загружается...\nэто может занять некоторое время';
         
-        await doStuff().then(() => {
+        doStuff().then(() => {
             $('#cameraBox').style.display = "block";
             $('#begin').style.display = "none";
         });
