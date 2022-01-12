@@ -211,11 +211,11 @@ window.onload = () => {
         $("#begin > center:nth-child(6)").innerText = 'Модель загружается...\nэто может занять некоторое время';
         
         doStuff().then(() => {
-            $('#cameraBox').style.display = "block";
+            $('#cameraBox').style.transform = "translateY(0)";
             $('#begin').style.display = "none";
         });
     }
     
-    $('#cameraBox').style.display = "none";
+    $('#cameraBox').style.transform = "translateY(100vh)";
     $('#begin').addEventListener('click', begin);
 };
