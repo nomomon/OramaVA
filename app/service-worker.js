@@ -32,8 +32,8 @@ const FILES_TO_CACHE = [
     'tf.min.js',
 ];
 
-const staticCacheName = 'site-static-v1';
-const dynamicCacheName = 'site-dynamic-v1';
+const staticCacheName = 'site-static-v2';
+const dynamicCacheName = 'site-dynamic-v2';
 
 const limitCacheSize = (name, size) => {
 	caches.open(name).then(cache => {
@@ -48,12 +48,12 @@ const limitCacheSize = (name, size) => {
 // install event
 self.addEventListener('install', evt => {
 //console.log('service worker installed');
-evt.waitUntil(
-	caches.open(staticCacheName).then((cache) => {
-	console.log('caching shell assets');
-	cache.addAll(assets);
-	})
-);
+	evt.waitUntil(
+		caches.open(staticCacheName).then((cache) => {
+			console.log('caching shell assets');
+			cache.addAll(FILES_TO_CACHE);
+		})
+	);
 });
 
 // activate event
