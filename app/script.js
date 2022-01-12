@@ -203,23 +203,23 @@ window.addEventListener('beforeinstallprompt', (e) => {
 });
 
 let size = 200;
-$("input").addEventListener("input", (e) => {
-    size = e.srcElement.value;
-    $("#rangeValue").innerText = e.srcElement.value;
-});
+// $("input").addEventListener("input", (e) => {
+//     size = e.srcElement.value;
+//     $("#rangeValue").innerText = e.srcElement.value;
+// });
 
 let stop = false;
 window.onload = () => {
     function begin(){
         $('#begin').removeEventListener('click', begin);
-        $("#begin > center:nth-child(6)").innerText = 'Модель загружается...\nэто может занять некоторое время';
+        $("#begin > center:nth-child(6)").innerText = 
+            'Модель загружается...\nэто может занять некоторое время';
+        $('#cameraBox').style.display = "block";
         
         doStuff().then(() => {
-            $('#cameraBox').style.transform = "translateY(0)";
             $('#begin').style.display = "none";
         });
     }
-    window.scrollTo(0, 0);
-    $('#cameraBox').style.transform = "translateY(100vh)";
+    $('#cameraBox').style.display = "none";
     $('#begin').addEventListener('click', begin);
 };
