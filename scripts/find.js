@@ -28,7 +28,7 @@ async function performDetections(model, camera, [ctx, imgHeight, imgWidth]) {
     const justValues = topDetections.values.squeeze();
     const scores = await justValues.data();
 
-    const maxBoxes = 5;
+    const maxBoxes = 20;
     const iouThreshold = 0.2;
     const detectionThreshold = 0.6;
 
@@ -43,43 +43,12 @@ async function performDetections(model, camera, [ctx, imgHeight, imgWidth]) {
 
     const chosen = await nmsDetections.selectedIndices.data();
 
-    // Clear canvas
-    ctx.clearRect(0, 0, ctx.canvas.width, ctx.canvas.height)
-
     chosen.forEach((detection) => {
-        ctx.strokeStyle = "#0F0";
-        ctx.lineWidth = 4;
-        ctx.globalCompositeOperation='destination-over'; 
         const detectedIndex = maxIndices[detection]; 
         const detectedClass = CLASSES[detectedIndex]; 
         const detectedScore = scores[detection];
-        const dBox = boxes[detection];
 
         console.log(detectedClass, detectedScore);
-
-        // No negative values for start positions
-        const startY = dBox[0] > 0 ? dBox[0] * imgHeight : 0;
-        const startX = dBox[1] > 0 ? dBox[1] * imgWidth : 0;
-        const height = (dBox[2] - dBox[0]) * imgHeight;
-        const width = (dBox[3] - dBox[1]) * imgWidth;
-        ctx.strokeRect(startX, startY, width, height);
-
-        // Draw the label background.
-        ctx.globalCompositeOperation='source-over'; 
-        ctx.fillStyle = "#0F0";
-        const textHeight = 16;
-        const textPad = 4;
-        const label = `${detectedClass} ${Math.round(detectedScore * 100)}%`; 
-        const textWidth = ctx.measureText(label).width;
-        ctx.fillRect(
-            startX,
-            startY,
-            textWidth + textPad,
-            textHeight + textPad
-        );
-        // Draw the text last to ensure it's on top.
-        ctx.fillStyle = "#000000";
-        ctx.fillText(label, startX + textPad/2, startY + textPad/2);
 
         say(detectedClass);
     });

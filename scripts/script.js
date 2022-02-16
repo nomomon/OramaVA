@@ -17,15 +17,9 @@ async function setupWebcam(videoRef) {
         }
         return new Promise((resolve, _) => {
             videoRef.onloadedmetadata = () => {
-                const detection = document.getElementById('detection')
-                const ctx = detection.getContext('2d')
                 const imgWidth = videoRef.clientWidth
                 const imgHeight = videoRef.clientHeight
-                detection.width = imgWidth
-                detection.height = imgHeight
-                ctx.font = '16px sans-serif'
-                ctx.textBaseline = 'top'
-                resolve([ctx, imgHeight, imgWidth])
+                resolve([imgHeight, imgWidth])
             }
         })
     } else {
