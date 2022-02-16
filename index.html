@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Орама Визуальный Помощник</title>
+    <link rel="stylesheet" href="./styles/icons/fa.css">
+    <link rel="stylesheet" href="./styles/style.css">
+</head>
+<body>
+    <nav>
+        <a class="nav_item" href="#">
+            <i class="fa-brands fa-readme"></i>
+             Прочитать
+        </a>
+        <a class="nav_item" href="#">
+            <i class="fa-solid fa-face-viewfinder"></i>
+             Распознать
+        </a>
+        <a class="nav_item" href="#">
+            <i class="fa-solid fa-magnifying-glass"></i>
+             Найти
+        </a>
+        <a class="nav_item" href="#">
+            <i class="fa-solid fa-gear"></i>
+             Настройки
+        </a>
+    </nav>
+    <main>
+        <video id="camera" autoplay></video>
+    </main>
+    <script src="./scripts/script.js"></script>
+    <script>
+        setupWebcam($("#camera"))
+    </script>
+</body>
+</html>

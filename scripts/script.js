@@ -43,7 +43,6 @@ function getRusVoice(voices){
 }
 
 function say(text, lang="ru"){
-    
     const voices = speechSynthesis.getVoices();
     if(voices.length > 0){
         const tts = new SpeechSynthesisUtterance(text);
