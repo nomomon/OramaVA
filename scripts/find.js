@@ -1,3 +1,27 @@
+$("#find").addEventListener("click", () => {
+    $("#object_list").style.display = "block";
+});
+
+function fillInObjectsList(){
+    for(let objectClass of CLASSES.sort()){
+        if(objectClass in {"неиспользованный":"", "unused":""}) continue;
+        
+        $("#list").innerHTML += `\n<li>${objectClass}</li>`;
+    }
+    
+    $("#list").querySelectorAll("li").forEach(li => {
+        li.addEventListener("click", () => {
+            const objectClass = li.innerText; 
+            find(objectClass);
+        });
+    });
+}
+
+function find(objectClass){
+    console.log(objectClass);
+    $("#object_list").style.display = "none";
+}
+
 function loadModel(){
     const modelPath = "./model/model.json";
     return tf.loadGraphModel(modelPath);

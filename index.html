@@ -11,22 +11,22 @@
 </head>
 <body>
     <nav>
-        <a class="nav_item" href="#">
+        <a class="nav_item" href="#" id="ocr">
             <i class="fa-brands fa-readme"></i>
             <div class="break"></div>
              Прочитать
         </a>
-        <a class="nav_item" href="#">
+        <a class="nav_item" href="#" id="describe">
             <i class="fa-solid fa-face-viewfinder"></i>
             <div class="break"></div>
              Распознать
         </a>
-        <a class="nav_item" href="#">
+        <a class="nav_item" href="#" id="find">
             <i class="fa-solid fa-magnifying-glass"></i>
             <div class="break"></div>
              Найти
         </a>
-        <a class="nav_item" href="#">
+        <a class="nav_item" href="#" id="settings">
             <i class="fa-solid fa-gear"></i>
             <div class="break"></div>
              Настройки
@@ -37,10 +37,20 @@
             <video id="camera" autoplay></video>
         </div>
     </main>
+    <div id="object_list">
+        <div>
+            Список Объектов
+        </div>
+        <ul id="list">
+        </ul>
+    </div>
     <script src="./scripts/sw.js"></script>
     <script src="./scripts/script.js"></script>
+    <script src="./models/objdet/labels_rus.js"></script>
+    <script src="./scripts/find.js"></script>
     <script>
-        setupWebcam($("#camera"))
+        setupWebcam($("#camera"));
+        fillInObjectsList();
     </script>
 </body>
 </html>
