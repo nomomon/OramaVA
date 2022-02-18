@@ -19,7 +19,6 @@ function fillInObjectsList(){
 
 function screenWasTouched(){
     stop = true;
-    console.log("oops")
 }
 
 function find(objectClass){
@@ -28,20 +27,20 @@ function find(objectClass){
     setTimeout(() => {
         $("body").addEventListener("click", screenWasTouched, {once:true})
     }, 100)
-
-
+    
+    
     const camera = $('#camera')
-
+    
     const interval = setInterval(() => {
         requestAnimationFrame(() => {
             performDetections(objectDetectionModel, camera).then(foundObjects => {
                 console.log(objectClass, foundObjects);
                 if(foundObjects.includes(objectClass)){
-                    say("нашел!");
+                    pulse.play();
                 }
                 
                 if(stop){
-                    say("поиск остановлен");
+                    off.play();
                     stop = false;
                     // tf.dispose([objectDetectionModel]);
                     clearInterval(interval);
