@@ -17,31 +17,51 @@ function fillInObjectsList(){
     });
 }
 
+function screenWasTouched(){
+    stop = true;
+    console.log("oops")
+}
+
 function find(objectClass){
     console.log(objectClass);
     $("#object_list").style.display = "none";
+    setTimeout(() => {
+        $("body").addEventListener("click", screenWasTouched, {once:true})
+    }, 100)
+
+
+    const camera = $('#camera')
+
+    const interval = setInterval(() => {
+        requestAnimationFrame(() => {
+            performDetections(objectDetectionModel, camera).then(foundObjects => {
+                console.log(objectClass, foundObjects);
+                if(foundObjects.includes(objectClass)){
+                    say("нашел!");
+                }
+                
+                if(stop){
+                    say("поиск остановлен");
+                    stop = false;
+                    // tf.dispose([objectDetectionModel]);
+                    clearInterval(interval);
+                }
+            });
+        })
+    }, 300);
+
 }
 
 function loadModel(){
-    const modelPath = "./model/model.json";
+    const modelPath = "/models/objdet/model.json";
     return tf.loadGraphModel(modelPath);
 }
 
-async function performDetections(model, camera, [ctx, imgHeight, imgWidth]) {
+async function performDetections(model, camera){
     const cameraInputTensor = tf.browser.fromPixels(camera);
     const singleBatch = tf.expandDims(cameraInputTensor, 0);
-    
-    const size = 200;
-	const proccessedImage = tf.image.cropAndResize(
-		singleBatch, 	        					// image [batch,imageHeight,imageWidth, depth]
-		[[0, 0, 1, 1]],				                // standartized boxes [numBoxes, 4]
-		[0],										// image that the i-th box refers to
-		[size, Math.floor(size*imgWidth/imgHeight)],// cropSize [num, num]
-        'bilinear'
-	);
-    const proccessedImageInt = tf.cast(proccessedImage, "int32");
 
-    const results = await model.executeAsync(proccessedImageInt);
+    const results = await model.executeAsync(singleBatch);
 
     const justBoxes = results[1].squeeze();
     const boxes = await justBoxes.array();
@@ -66,50 +86,36 @@ async function performDetections(model, camera, [ctx, imgHeight, imgWidth]) {
     );
 
     const chosen = await nmsDetections.selectedIndices.data();
+    const foundObjects = [];
 
     chosen.forEach((detection) => {
         const detectedIndex = maxIndices[detection]; 
         const detectedClass = CLASSES[detectedIndex]; 
         const detectedScore = scores[detection];
 
-        console.log(detectedClass, detectedScore);
-
-        say(detectedClass);
+        if(detectedScore > .5){
+            foundObjects.push(detectedClass);
+        }
     });
-
+    
     tf.dispose([
         cameraInputTensor, 
         singleBatch,
-        proccessedImage,
-        proccessedImageInt,
         results, 
         topDetections, 
         justBoxes, 
         justValues, 
         nmsDetections
     ]);
+
+    return foundObjects;
 }
 
-var model;
-
-async function doStuff() {
+var objectDetectionModel, stop = false;
+(async function (){
     try {
-        model = await loadModel()
-        const camera = document.getElementById('camera')
-        const camDetails = await setupWebcam(camera)
-
-        const interval = setInterval(() => {
-            requestAnimationFrame(() => {
-                performDetections(model, camera, camDetails).then(() => {
-                    if(stop){
-                        tf.dispose([model]);
-                        clearInterval(interval);
-                    }
-                });
-            })
-        }, 1500);
-
+        objectDetectionModel = await loadModel()
     } catch (e) {
         console.error(e)
     }
-}
+})();
