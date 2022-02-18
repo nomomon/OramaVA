@@ -3,7 +3,10 @@ $("#find").addEventListener("click", () => {
 });
 
 function fillInObjectsList(){
-    for(let objectClass of CLASSES.sort()){
+    const objectClasses = [...CLASSES];
+    objectClasses.sort();
+
+    for(let objectClass of objectClasses){
         if(objectClass in {"неиспользованный":"", "unused":""}) continue;
         
         $("#list").innerHTML += `\n<li>${objectClass}</li>`;
@@ -29,11 +32,14 @@ function find(objectClass){
     }, 100)
     
     
-    const camera = $('#camera')
+    const camera = $('#camera');
+    const imgWidth = camera.clientWidth
+    const imgHeight = camera.clientHeight
     
     const interval = setInterval(() => {
         requestAnimationFrame(() => {
-            performDetections(objectDetectionModel, camera).then(foundObjects => {
+            performDetections(objectDetectionModel, camera, [imgHeight, imgWidth])
+            .then(foundObjects => {
                 console.log(objectClass, foundObjects);
                 if(foundObjects.includes(objectClass)){
                     pulse.play();
@@ -47,7 +53,7 @@ function find(objectClass){
                 }
             });
         })
-    }, 300);
+    }, 500);
 
 }
 
@@ -56,14 +62,23 @@ function loadModel(){
     return tf.loadGraphModel(modelPath);
 }
 
-async function performDetections(model, camera){
+async function performDetections(model, camera, [imgHeight, imgWidth]){
     const cameraInputTensor = tf.browser.fromPixels(camera);
     const singleBatch = tf.expandDims(cameraInputTensor, 0);
 
-    const results = await model.executeAsync(singleBatch);
+    const size = Math.min(400, imgHeight);
+    const proccessedImage = tf.image.cropAndResize(
+        singleBatch, 	        					
+        [[0, 0, 1, 1]],				                
+        [0],										
+        [size, Math.floor(size * imgWidth/imgHeight)],
+        'bilinear'
+    );
+    const proccessedImageInt = tf.cast(proccessedImage, "int32");
+
+    const results = await model.executeAsync(proccessedImageInt);
 
     const justBoxes = results[1].squeeze();
-    const boxes = await justBoxes.array();
 
     const topDetections = tf.topk(results[0]);
     const maxIndices = await topDetections.indices.data();
@@ -100,6 +115,8 @@ async function performDetections(model, camera){
     tf.dispose([
         cameraInputTensor, 
         singleBatch,
+        proccessedImage,
+        proccessedImageInt,
         results, 
         topDetections, 
         justBoxes, 
