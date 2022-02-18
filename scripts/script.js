@@ -44,6 +44,9 @@ function say(text, lang="ru"){
         if(lang == "ru"){
             tts.lang = "ru-RU";
         }
-        return window.speechSynthesis.speak(tts);
+        
+        if(!window.speechSynthesis.speaking){
+            return window.speechSynthesis.speak(tts);
+        }
     }
 }
