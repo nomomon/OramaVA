@@ -53,7 +53,7 @@ function find(objectClass){
 }
 
 function loadModel(){
-    const modelPath = "/models/objdet/model.json";
+    const modelPath = "./models/objdet/model.json";
     return tf.loadGraphModel(modelPath);
 }
 
