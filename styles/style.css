@@ -112,3 +112,11 @@ main{
     background-color: white;
     box-shadow:0 0 1px rgb(73, 73, 73);
 }
+
+.unselectable{
+    user-select: none;
+    -moz-user-select: none;
+    -khtml-user-select: none;
+    -webkit-user-select: none;
+    -o-user-select: none;
+} 

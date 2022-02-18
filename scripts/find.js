@@ -1,5 +1,7 @@
 $("#find").addEventListener("click", () => {
+    $("nav").style.display = "none";
     $("#object_list").style.display = "block";
+    $("#object_list").focus();
 });
 
 function fillInObjectsList(){
@@ -27,6 +29,7 @@ function screenWasTouched(){
 function find(objectClass){
     console.log(objectClass);
     $("#object_list").style.display = "none";
+    $("nav").style.display = "flex";
     setTimeout(() => {
         $("body").addEventListener("click", screenWasTouched, {once:true})
     }, 100)
