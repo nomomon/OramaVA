@@ -4,11 +4,7 @@ $("#ocr").addEventListener("click", () => {
 
 async function loadOCRModel(worker){
     await worker.load();
-    await worker.loadLanguage('eng'); // mult lang eng+rus
-    await worker.initialize('eng');
-    // await worker.setParameters({
-    //     tessedit_char_whitelist: '0123456789abcdefghijklmnopqrstuvwxyzабвгдеёжзиклмнопрстуфхцчшщъыьэюя.,?!',
-    // });
+    await worker.loadLanguage('rus'); // mult lang eng+rus
 }
 
 async function deleteOCRModel(worker){
