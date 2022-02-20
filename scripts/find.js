@@ -28,6 +28,7 @@ function screenWasTouched(){
 
 function find(objectClass){
     console.log(objectClass);
+    on.play();
     $("#object_list").style.display = "none";
     $("nav").style.display = "flex";
     setTimeout(() => {
