@@ -1,5 +1,5 @@
 $("#find").addEventListener("click", () => {
-    $("nav").style.display = "none";
+    $("nav").ariaHidden = true;
     $("#object_list").style.display = "block";
     $("#object_list").focus();
 });
@@ -26,10 +26,10 @@ function find(objectClass){
     console.log(objectClass);
     on.play();
     $("#object_list").style.display = "none";
-    $("nav").style.display = "flex";
+    $("nav").ariaHidden = false;
     setTimeout(() => {
         $("body").addEventListener("click", screenWasTouched, {once:true})
-    }, 100)
+    }, 100);
     
     
     const camera = $('#camera');
