@@ -5,6 +5,10 @@ $("#ocr").addEventListener("click", () => {
 async function loadOCRModel(worker){
     await worker.load();
     await worker.loadLanguage('rus'); // mult lang eng+rus
+    await worker.initialize('rus');
+    await worker.setParameters({
+        tessedit_char_whitelist: '0123456789абвгдеёжзиклмнопрстуфхцчшщъыьэюя!?@#$%^&*()_+%:,.;',
+    });
 }
 
 async function deleteOCRModel(worker){
@@ -12,7 +16,7 @@ async function deleteOCRModel(worker){
 }
 
 function cleanResults(results, threshold = 30){
-    return (results.data.confidence > threshold)? results.data.text : "";
+    return (results.data.confidence > threshold)? results.data.text : "Текст не обнаружен";
 }
 
 async function performOCR(worker, img){
