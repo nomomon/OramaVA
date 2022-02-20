@@ -50,3 +50,8 @@ function say(text, lang="ru"){
         }
     }
 }
+
+let stop = false;
+function screenWasTouched(){
+    stop = true;
+}

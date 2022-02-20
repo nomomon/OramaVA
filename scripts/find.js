@@ -22,10 +22,6 @@ function fillInObjectsList(){
     });
 }
 
-function screenWasTouched(){
-    stop = true;
-}
-
 function find(objectClass){
     console.log(objectClass);
     on.play();
@@ -131,7 +127,7 @@ async function performDetections(model, camera, [imgHeight, imgWidth]){
     return foundObjects;
 }
 
-var objectDetectionModel, stop = false;
+var objectDetectionModel;
 (async function (){
     try {
         objectDetectionModel = await loadModel()
