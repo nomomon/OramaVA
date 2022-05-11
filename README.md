@@ -1,3 +1,7 @@
+*Currently the project is work in progress. See an older version of the website & PWA [here](https://oramava.nomomon.repl.co/).*
+
+---
+
 ![Orama Visual Assistant banner](https://nomomon.github.io/images/oramava-preview.jpeg)
 # Orama Visual Assistant
 
