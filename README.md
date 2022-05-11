@@ -45,11 +45,22 @@ Our goal is to help visually impaired people to become more independent.
 
   <dt>Jan 2022</dt>
   <dd>Change from image classification to object detection (<a href='https://tfhub.dev/tensorflow/tfjs-model/ssd_mobilenet_v2/1/default/1'>SSD Mobile Netv2</a>). Change from naming everything to search for an object task. </dd>
+  
+  <dd>OCR functionality with <a href='https://tesseract.projectnaptha.com/'>Tesseract</a>. It is there, but it has bad performance.</dd>
 
-  <dt>Jan 2022 – Now</dt>
-  <dd>OCR functionality with <a href='https://tesseract.projectnaptha.com/'>Tesseract</a>.</dd>
-
+  <dt>Mar 2022</dt>
+  <dd>Began working on a react native version of the app.</dd>
 </dl>
 
+## WIP / For future
+
+- [ ] Improve OCR reader.
+- [ ] Change to React Native.
+- [ ] Transfer to cloud processing rather than on-device.
+- [ ] Currency classification. Name what banknote that is seen in the camera.
+- [ ] Facial recognition. Each user will have their own pool of people saved in the app for future facial recognition tasks.
+- [ ] Image description. Describe what's in the image.
+- [ ] _'Open with OramaVA'_ on images to do OCR/ facial recognition/ image description.
+ 
 ## License
 All of the codebase is **MIT Licensed** unless otherwise stated.
