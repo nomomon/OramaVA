@@ -52,7 +52,7 @@ We are the Nurmukhambetov family. There are seven of us in the family: mom, dad,
   <dd>Third place finalists at HackDay 2020. First funding of the project.</dd>
   
   <dt>Jul 2020</dt>
-  <dd>Finalists across the Aisa continent at <a href='https://www.curiositymachine.org/about/'>Technovation Famlies</a>.</dd>
+  <dd>Finalists across the Aisa continent at <a href='https://www.curiositymachine.org/about/'>Technovation Families</a>.</dd>
 
   <dt>Jan 2022</dt>
   <dd>Change from image classification to object detection (<a href='https://tfhub.dev/tensorflow/tfjs-model/ssd_mobilenet_v2/1/default/1'>SSD Mobile Netv2</a>). Change from naming everything to search for an object task. </dd>
