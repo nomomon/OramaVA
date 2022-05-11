@@ -20,7 +20,7 @@ Our goal is to help visually impaired people to become more independent.
 
 <p align="center">
   <a href="https://www.youtube.com/watch?v=a6ABuAaqgfA">
-    <img width="450" src="https://i.ytimg.com/vi/a6ABuAaqgfA/maxresdefault.jpg"/>
+    <img width="450" src="assets/video_cover.jpg"/>
     <br>
     Link to the pitch video on YouTube
   </a>
@@ -33,7 +33,7 @@ We are the Nurmukhambetov family. There are seven of us in the family: mom, dad,
 > 
 > ‒ Damira Nurmukhambetova
 <p align="center">
-  <img width="450" src="https://oramava.nomomon.repl.co/app/images/family.jpg"/>
+  <img width="450" src="./assets/family.jpg"/>
 <p>
   
 ## Project time line
