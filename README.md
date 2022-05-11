@@ -35,7 +35,7 @@ Our goal is to help visually impaired people to become more independent.
   <dd>First demo made using KNN algorithm on images.</dd>
   
   <dt>Apr 2020</dt>
-  <dd>Classification MobileNetv2 model trained with transfer learning.</dd>
+  <dd>Classification MobileNetv2 model trained with transfer learning (<a href='https://teachablemachine.withgoogle.com/'>Teachable Machine</a>).</dd>
   
   <dt>May 2020</dt>
   <dd>Third place finalists at HackDay 2020. First funding of the project.</dd>
