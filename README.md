@@ -5,11 +5,18 @@
 ![Orama Visual Assistant banner](https://nomomon.github.io/images/oramava-preview.jpeg)
 # Orama Visual Assistant
 
+[Pitch video](./README.md#pitch-video) <br>
+[Story behind the project](./README.md#story-behind-the-project) <br>
+[Project time line](./README.md#project-time-line) <br>
+[WIP / For future](./README.md#wip--for-future) <br>
+[License](./README.md#license) <br>
+
+
 **Orama Visual Assistant** (from Greek: *Όραμα*, meaning *"vision"*) is an app for visually impaired people that announces objects detected using user's phone camera.
 
 Our goal is to help visually impaired people to become more independent.
 
-## Pitch Video
+## Pitch video
 
 <p align="center">
   <a href="https://www.youtube.com/watch?v=a6ABuAaqgfA">
@@ -20,12 +27,16 @@ Our goal is to help visually impaired people to become more independent.
 <p>
   
 ## Story behind the project
- 
+We are the Nurmukhambetov family. There are seven of us in the family: mom, dad, four sons and a daughter. Three of the sons seen in the photograph developed this project.
+  
 > “Our youngest daughter, Sofia, drove us to create this project. Sofia, was born prematurely, from birth we fought for her life, they tried as much as possible to save her eyesight. In consequence of 12 operations, we were able to save Sofia's light perception. But this is not enough, in order to live a full-fledged life on her own, she needs outside help.”
 > 
 > ‒ Damira Nurmukhambetova
+<p align="center">
+  <img width="450" src="https://oramava.nomomon.repl.co/app/images/family.jpg"/>
+<p>
   
-## Project Time Line
+## Project time line
   
 <dl>
   <dt>Nov 2019</dt>
