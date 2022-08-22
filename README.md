@@ -2,7 +2,7 @@
 
 ---
 
-![Orama Visual Assistant banner](https://nomomon.github.io/images/oramava-preview.jpeg)
+![Orama Visual Assistant banner](https://nomomon.github.io/images/projects/oramava-preview.jpeg)
 # Orama Visual Assistant
 
 [Pitch video](./README.md#pitch-video) <br>
